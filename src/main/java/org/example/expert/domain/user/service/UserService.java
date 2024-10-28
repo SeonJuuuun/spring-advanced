@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
 
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -25,7 +27,7 @@ public class UserService {
 
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
-        if (userChangePasswordRequest.getNewPassword().length() < 8 ||
+        if (userChangePasswordRequest.getNewPassword().length() < MIN_PASSWORD_LENGTH ||
                 !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
                 !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
             throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
@@ -34,14 +36,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
 
-        if (passwordEncoder.matches(userChangePasswordRequest.getNewPassword(), user.getPassword())) {
-            throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
-        }
-
-        if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
-            throw new InvalidRequestException("잘못된 비밀번호입니다.");
-        }
-
+        user.validateNewPassword(userChangePasswordRequest.getNewPassword(), passwordEncoder);
+        user.validatePassword(userChangePasswordRequest.getOldPassword(), passwordEncoder);
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 }

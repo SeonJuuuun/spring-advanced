@@ -11,8 +11,10 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.entity.Timestamped;
+import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.enums.UserRole;
 
 @Getter
@@ -24,9 +26,12 @@ public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String email;
+
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -44,6 +49,18 @@ public class User extends Timestamped {
 
     public static User fromAuthUser(AuthUser authUser) {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    }
+
+    public void validateNewPassword(String newPassword, PasswordEncoder passwordEncoder) {
+        if (passwordEncoder.matches(newPassword, this.password)) {
+            throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+        }
+    }
+
+    public void validatePassword(String oldPassword, PasswordEncoder passwordEncoder) {
+        if (!passwordEncoder.matches(oldPassword, this.password)) {
+            throw new InvalidRequestException("잘못된 비밀번호입니다.");
+        }
     }
 
     public void changePassword(String password) {
