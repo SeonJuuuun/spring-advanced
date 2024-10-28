@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.expert.config.PasswordEncoder;
+import org.example.expert.domain.auth.exception.AuthException;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.common.exception.InvalidRequestException;
@@ -26,12 +27,12 @@ public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(unique = true)
     private String email;
-
+    
     private String password;
-
+    
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -60,6 +61,12 @@ public class User extends Timestamped {
     public void validatePassword(String oldPassword, PasswordEncoder passwordEncoder) {
         if (!passwordEncoder.matches(oldPassword, this.password)) {
             throw new InvalidRequestException("잘못된 비밀번호입니다.");
+        }
+    }
+
+    public void isValidPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        if (!passwordEncoder.matches(rawPassword, this.password)) {
+            throw new AuthException("잘못된 비밀번호입니다.");
         }
     }
 
