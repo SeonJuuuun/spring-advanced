@@ -37,8 +37,8 @@ public class ManagerController {
     }
 
     @GetMapping("/todos/{todoId}/managers")
-    public ResponseEntity<List<ManagerResponse>> getMembers(@PathVariable long todoId) {
-        return ResponseEntity.ok(managerService.getManagers(todoId));
+    public ResponseEntity<List<ManagerResponse>> retrieveMembers(@PathVariable long todoId) {
+        return ResponseEntity.ok(managerService.retrieveManagers(todoId));
     }
 
     @DeleteMapping("/todos/{todoId}/managers/{managerId}")

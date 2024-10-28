@@ -21,7 +21,7 @@ public class WeatherClient {
         this.restTemplate = builder.build();
     }
 
-    public String getTodayWeather() {
+    public String retrieveTodayWeather() {
         ResponseEntity<WeatherDto[]> responseEntity =
                 restTemplate.getForEntity(buildWeatherApiUri(), WeatherDto[].class);
 
