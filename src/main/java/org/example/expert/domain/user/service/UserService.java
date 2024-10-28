@@ -30,7 +30,7 @@ public class UserService {
         if (userChangePasswordRequest.getNewPassword().length() < MIN_PASSWORD_LENGTH ||
                 !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
                 !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
-            throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
+            throw new InvalidRequestException("새 비밀번호는 " + MIN_PASSWORD_LENGTH + "자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
         }
 
         User user = userRepository.findById(userId)
