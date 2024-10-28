@@ -36,8 +36,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
 
-        user.validateNewPassword(userChangePasswordRequest.getNewPassword(), passwordEncoder);
-        user.validatePassword(userChangePasswordRequest.getOldPassword(), passwordEncoder);
+        user.validateDifferentNewPassword(userChangePasswordRequest.getNewPassword(), passwordEncoder);
+        user.validateSameOldPassword(userChangePasswordRequest.getOldPassword(), passwordEncoder);
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 }

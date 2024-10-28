@@ -27,12 +27,12 @@ public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(unique = true)
     private String email;
-    
+
     private String password;
-    
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -52,19 +52,19 @@ public class User extends Timestamped {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
     }
 
-    public void validateNewPassword(String newPassword, PasswordEncoder passwordEncoder) {
+    public void validateDifferentNewPassword(String newPassword, PasswordEncoder passwordEncoder) {
         if (passwordEncoder.matches(newPassword, this.password)) {
             throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
         }
     }
 
-    public void validatePassword(String oldPassword, PasswordEncoder passwordEncoder) {
+    public void validateSameOldPassword(String oldPassword, PasswordEncoder passwordEncoder) {
         if (!passwordEncoder.matches(oldPassword, this.password)) {
             throw new InvalidRequestException("잘못된 비밀번호입니다.");
         }
     }
 
-    public void isValidPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+    public void validatePassword(String rawPassword, PasswordEncoder passwordEncoder) {
         if (!passwordEncoder.matches(rawPassword, this.password)) {
             throw new AuthException("잘못된 비밀번호입니다.");
         }

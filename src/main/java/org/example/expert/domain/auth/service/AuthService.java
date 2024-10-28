@@ -49,7 +49,7 @@ public class AuthService {
         User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
                 () -> new InvalidRequestException("가입되지 않은 유저입니다."));
 
-        user.isValidPassword(signinRequest.getPassword(), passwordEncoder);
+        user.validatePassword(signinRequest.getPassword(), passwordEncoder);
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
 
