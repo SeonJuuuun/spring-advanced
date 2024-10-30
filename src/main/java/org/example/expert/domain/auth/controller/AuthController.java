@@ -17,12 +17,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/auth/signup")
+    @PostMapping("/auth/signUp")
     public SignUpResponse signUp(@Valid @RequestBody SignUpRequest signupRequest) {
         return authService.signUp(signupRequest);
     }
 
-    @PostMapping("/auth/signin")
+    @PostMapping("/auth/signIn")
     public SignInResponse signIn(@Valid @RequestBody SignInRequest signinRequest) {
         return authService.signIn(signinRequest);
     }
