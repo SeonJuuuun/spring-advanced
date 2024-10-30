@@ -5,9 +5,13 @@ import lombok.Getter;
 @Getter
 public class SignUpResponse {
 
-    private final String bearerToken;
+    private final Long userId;
+    private final String email;
+    private final String userRole;
 
-    public SignUpResponse(String bearerToken) {
-        this.bearerToken = bearerToken;
+    public SignUpResponse(final Long userId, final String email, final String userRole) {
+        this.userId = userId;
+        this.email = email;
+        this.userRole = userRole;
     }
 }
